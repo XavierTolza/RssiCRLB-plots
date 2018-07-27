@@ -59,10 +59,10 @@ def plot_measurements():
         for typ_i, (typ,lw,ls) in enumerate(zip(types,[2,1.5,1.5],"solid,dashed,dotted".split(","))):
             filename = "%s/%s_%s_cep.csv" % (root,measure,typ)
             _,x,y = pandas.read_csv(filename).values.transpose()
-            plot(x,y,measure_i>0,measure_i,typ_i,"%s %s" % (measure.replace("mean","AP").replace("non","7 AP non"), typ),lw=lw,ls=ls)
+            plot(y,x,measure_i>0,measure_i,typ_i,"%s %s" % (measure.replace("mean","AP").replace("non","7 AP non"), typ),lw=lw,ls=ls)
     filename = "%s/random_cep.csv" % root
     _,x,y = pandas.read_csv(filename).values.transpose()
-    plot(y,x,True,measure_i+1,0,"random")
+    plot(x,y,True,measure_i+1,0,"random")
 
     p.legend.location = "top_left"
     p.legend.click_policy="mute"
