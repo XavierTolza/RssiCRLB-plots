@@ -64,7 +64,7 @@ def plot_measurements():
     _,x,y = pandas.read_csv(filename).values.transpose()
     plot(x,y,True,measure_i+1,0,"random")
 
-    p.legend.location = "top_left"
+    p.legend.location = "bottom_right"
     p.legend.click_policy="mute"
     def show_hide_legend(legend=p.legend[0]):
         legend.visible = not legend.visible
