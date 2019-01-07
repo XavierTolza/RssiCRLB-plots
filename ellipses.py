@@ -12,8 +12,8 @@ step_size = room_size / 100.0
 ap_coordinates = np.array([[0, 0], [0, room_shape[1]], room_shape, [room_shape[0], 0]])
 transmitters_coordinates = np.array([[i / 2.0 for i in room_shape], [0, room_shape[1] / 2.0]])
 gamma = 2
+receiver_gains = transmitters_gains = (0, 1)  # mu and variance
 a0_muvar = (51, .1)
-receiver_gains = transmitters_gains = (10, 1)  # mu and variance
 variance = 2
 
 J, I, N = len(ap_coordinates), len(transmitters_coordinates), 20
@@ -66,7 +66,8 @@ for i in mean_cov:
     plot_ellipse(i[1], axe, i[0])
 
 for t in range(I):
-    axe.scatter(*estimate[:, t, :].T, label="Transmitter %i" % t,alpha=.2)
+    axe.scatter(*estimate[:, t, :].T, label="Transmitter %i" % t, alpha=.2)
+axe.scatter(*ap_coordinates.T, color="k", label="Access points")
 # axe.set_xlim(0,room_shape[0])
 # axe.set_ylim(0,room_shape[1])
 axe.legend()
