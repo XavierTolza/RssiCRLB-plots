@@ -3,11 +3,12 @@ import itertools
 import numpy as np
 import matplotlib.pyplot as plt
 
+from plot_results import plot_results
 from tools import plot_ellipse
 
 room_size = 10
 room_shape = [room_size, room_size]
-step_size = room_size / 100.0
+step_size = room_size / 10.0
 
 ap_coordinates = np.array([[0, 0], [0, room_shape[1]], room_shape, [room_shape[0], 0]])
 transmitters_coordinates = np.array([[i / 2.0 for i in room_shape], [2, 2]])
@@ -18,6 +19,7 @@ variance = 2
 
 J, I, N = len(ap_coordinates), len(transmitters_coordinates), 20
 n_configuration = 100
+
 
 (G, noise_G), (a0, noise_a0), (R, noise_R) = [
     (np.array([i[0]] * j), np.random.normal(0, np.sqrt(i[1]), (n_configuration, j)))
@@ -65,22 +67,7 @@ dYb = np.repeat(np.moveaxis(dYb, 1, 0), N, axis=1)
 fisher = (i.T.dot(covi).dot(i) for i in dYb)
 crlb = np.array([np.linalg.inv(i) for i in fisher])
 
-# Plotting results
-from bokeh import palettes
-
-colors = np.reshape(palettes.Category20[20], (-1, 2))
-axe = plt.figure().add_subplot(111)
-
-# Drawing covariance ellipses
-mean_cov = [(np.mean(i, axis=0), np.cov(i.T)) for i in np.moveaxis(estimate, 1, 0)]
-for i, j, c,d in zip(mean_cov, crlb, colors,transmitters_coordinates):
-    plot_ellipse(i[1], axe, i[0], color=c[1], ls=":")
-    plot_ellipse(j, axe, d, color=c[0])
-
-for t,c in zip(range(I),colors):
-    axe.scatter(*estimate[:, t, :].T, label="Transmitter %i" % t, alpha=.2,color=c[1])
-axe.scatter(*ap_coordinates.T, color="k", label="Access points")
-
-axe.legend()
-plt.show()
-pass
+if __name__ == '__main__':
+    # Plotting results
+    plot_results(transmitters_coordinates,estimate,ap_coordinates,crlb)
+    plt.show()
