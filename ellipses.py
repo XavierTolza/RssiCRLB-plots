@@ -6,9 +6,8 @@ import matplotlib.pyplot as plt
 from plot_results import plot_results
 from tools import plot_ellipse
 
-room_size = 10
-room_shape = [room_size, room_size]
-step_size = room_size / 100.0
+room_shape = [11, 6]
+step_size = np.min(room_shape) / 100.0
 
 ap_coordinates = np.array([[0, 0], [0, room_shape[1]], room_shape, [room_shape[0], 0]])
 transmitters_coordinates = np.array([[i / 2.0 for i in room_shape], [2, 2]])
