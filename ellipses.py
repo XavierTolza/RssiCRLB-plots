@@ -10,7 +10,7 @@ room_shape = [room_size, room_size]
 step_size = room_size / 100.0
 
 ap_coordinates = np.array([[0, 0], [0, room_shape[1]], room_shape, [room_shape[0], 0]])
-transmitters_coordinates = np.array([[i / 2.0 for i in room_shape], [0, room_shape[1] / 2.0]])
+transmitters_coordinates = np.array([[i / 2.0 for i in room_shape], [2, 2]])
 gamma = 2
 receiver_gains = transmitters_gains = (0, 1)  # mu and variance
 a0_muvar = (51, .1)
@@ -27,7 +27,8 @@ noise = np.random.normal(0, np.sqrt(variance), (n_configuration, J, I, N))
 noise = noise_G[:, :, None, None] - noise_R[:, None, :, None] + noise_a0[:, 0, None, None, None] + noise
 
 Gar = G[:, None] + a0[0] - R[None, :]
-d = np.linalg.norm(ap_coordinates[:, None, :] - transmitters_coordinates[None, :, :], axis=2)
+vector = ap_coordinates[:, None, :] - transmitters_coordinates[None, :, :]
+d = np.linalg.norm(vector, axis=2)
 Yb = Gar - 10 * gamma * np.log(d) / np.log(10)
 Y = Yb[None, :, :, None] + noise
 
@@ -57,19 +58,29 @@ estimate = theta[argmin, :]
 
 estimate_error = estimate - transmitters_coordinates[None, :, :]
 
+# Compute CRLB
+K = 10 * gamma / np.log(10)
+dYb = K * (vector / d[:, :, None] ** 2)
+dYb = np.repeat(np.moveaxis(dYb, 1, 0), N, axis=1)
+fisher = (i.T.dot(covi).dot(i) for i in dYb)
+crlb = np.array([np.linalg.inv(i) for i in fisher])
+
 # Plotting results
+from bokeh import palettes
+
+colors = np.reshape(palettes.Category20[20], (-1, 2))
 axe = plt.figure().add_subplot(111)
 
 # Drawing covariance ellipses
 mean_cov = [(np.mean(i, axis=0), np.cov(i.T)) for i in np.moveaxis(estimate, 1, 0)]
-for i in mean_cov:
-    plot_ellipse(i[1], axe, i[0])
+for i, j, c,d in zip(mean_cov, crlb, colors,transmitters_coordinates):
+    plot_ellipse(i[1], axe, i[0], color=c[1], ls=":")
+    plot_ellipse(j, axe, d, color=c[0])
 
-for t in range(I):
-    axe.scatter(*estimate[:, t, :].T, label="Transmitter %i" % t, alpha=.2)
+for t,c in zip(range(I),colors):
+    axe.scatter(*estimate[:, t, :].T, label="Transmitter %i" % t, alpha=.2,color=c[1])
 axe.scatter(*ap_coordinates.T, color="k", label="Access points")
-# axe.set_xlim(0,room_shape[0])
-# axe.set_ylim(0,room_shape[1])
+
 axe.legend()
 plt.show()
 pass
