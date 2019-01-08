@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 from bokeh import palettes
 from tools import plot_ellipse
 
+colors = np.reshape(palettes.Category20[20], (-1, 2))
+
 def plot_results(transmitters_coordinates, estimate, ap_coordinates, crlb):
 
-    colors = np.reshape(palettes.Category20[20], (-1, 2))
     axe = plt.figure().add_subplot(111)
 
     # Drawing covariance ellipses

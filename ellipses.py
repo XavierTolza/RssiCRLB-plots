@@ -8,7 +8,7 @@ from tools import plot_ellipse
 
 room_size = 10
 room_shape = [room_size, room_size]
-step_size = room_size / 10.0
+step_size = room_size / 100.0
 
 ap_coordinates = np.array([[0, 0], [0, room_shape[1]], room_shape, [room_shape[0], 0]])
 transmitters_coordinates = np.array([[i / 2.0 for i in room_shape], [2, 2]])
@@ -45,7 +45,7 @@ error = np.moveaxis(np.moveaxis(error, 4, 1), 3, 2).reshape((-1, I, J * N))
 receiver, _ = np.array(list(itertools.product(range(J), range(N)))).T
 cov = (receiver[:, None] == receiver[None, :]) * receiver_gains[1]
 cov = cov + a0_muvar[1] + transmitters_gains[1]
-cov += np.eye(J * N) * variance
+cov = cov + np.eye(J * N) * variance
 
 covi = np.linalg.inv(cov)
 
