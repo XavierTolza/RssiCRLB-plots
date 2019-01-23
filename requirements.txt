@@ -3,3 +3,4 @@ bokeh
 pscript
 matplotlib
 numpy
+pscript
