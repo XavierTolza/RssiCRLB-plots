@@ -4,3 +4,5 @@ pscript
 matplotlib
 numpy
 pscript
+bokeh
+tqdm
