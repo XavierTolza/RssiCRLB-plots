@@ -1,13 +1,11 @@
-import gc
 import itertools
-from multiprocessing.pool import Pool
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from tqdm import tqdm
 
 from plot_results import plot_results
-from tools import plot_ellipse
+
 
 room_shape = [11, 6]
 step_size = np.min(room_shape) / 100.0

@@ -5,19 +5,29 @@ from tools import plot_ellipse
 
 colors = np.reshape(palettes.Category20[20], (-1, 2))
 
-def plot_results(transmitters_coordinates, estimate, ap_coordinates, crlb):
 
-    axe = plt.figure().add_subplot(111)
+def plot_results(transmitters_coordinates, estimate, ap_coordinates, crlb):
+    fig = plt.figure()
+    axe = fig.add_subplot(121)
+    axe2 = fig.add_subplot(122)
 
     # Drawing covariance ellipses
     mean_cov = [(np.mean(i, axis=0), np.cov(i.T)) for i in np.moveaxis(estimate, 1, 0)]
-    for i, j, c,d in zip(mean_cov, crlb, colors,transmitters_coordinates):
+    for i, j, c, d in zip(mean_cov, crlb, colors, transmitters_coordinates):
         plot_ellipse(i[1], axe, i[0], color=c[1], ls=":")
         plot_ellipse(j, axe, d, color=c[0])
 
-    for t,c in zip(range(len(transmitters_coordinates)),colors):
-        axe.scatter(*estimate[:, t, :].T, label="Transmitter %i" % t, alpha=.2,color=c[1])
+    for t, c in zip(range(len(transmitters_coordinates)), colors):
+        axe.scatter(*estimate[:, t, :].T, label="Transmitter %i" % t, alpha=.2, color=c[1])
     axe.scatter(*ap_coordinates.T, color="k", label="Access points")
+
+    RMSE = np.mean(np.linalg.norm(estimate - transmitters_coordinates[None, :, :], axis=2), axis=0)
+    x = np.arange(len(transmitters_coordinates))
+    axe2.bar(x, RMSE, label="RSME", width=.45)
+    axe2.bar(x+.45, [np.trace(i) for i in crlb], label="CRLB", width=.45)
+    axe2.legend()
+    axe2.set_xlabel("Transmitter (Asset)")
+    axe2.set_ylabel("Transmitter (Asset)")
 
     axe.legend()
     return axe
