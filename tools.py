@@ -13,4 +13,4 @@ def ellipse_from_covariance(cov, angle=None, n_sigma=2):
 def plot_ellipse(cov, axe, x0, **kwargs):
     angle = np.linspace(0, 2 * np.pi, 100)
     el = ellipse_from_covariance(cov, angle) + x0[:, None]
-    return axe.plot(*el, **kwargs)
+    return axe.line(el[0],el[1], **kwargs)

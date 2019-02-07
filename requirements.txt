@@ -6,3 +6,4 @@ numpy
 pscript
 bokeh
 tqdm
+dill
