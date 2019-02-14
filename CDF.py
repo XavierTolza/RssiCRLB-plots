@@ -42,7 +42,7 @@ def plot_measurements():
     types = "real,cramer,simu".split(",")
     root = "exported_data"
 
-    output_file("plot.html",title="Publication 2 plot")
+    output_file("CDF.html",title="Publication 2 plot")
     p = figure(title="Cumulative density function of positionning error", x_axis_label='Distance in meters',
                y_axis_label='CDF',sizing_mode="stretch_both")
 

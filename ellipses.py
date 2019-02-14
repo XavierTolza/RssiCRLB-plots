@@ -5,12 +5,18 @@ import dill
 import numpy as np
 import os
 from bokeh.io import show
+from bokeh.layouts import row
 
 from plot_results import plot_results
 
 cache_file = "cache.pkl"
-if os.path.isfile(cache_file):
-    with lzma.open(cache_file,"rb") as fp:
+if __name__ != "__main__":
+    use_cache = False
+else:
+    use_cache = os.path.isfile(cache_file)
+
+if use_cache:
+    with lzma.open(cache_file, "rb") as fp:
         transmitters_coordinates, estimate, ap_coordinates, crlb = dill.load(fp)
 
 else:
@@ -26,7 +32,6 @@ else:
 
     J, I, N = len(ap_coordinates), len(transmitters_coordinates), 20
     n_configuration = 100
-
 
     (G, noise_G), (a0, noise_a0), (R, noise_R) = [
         (np.array([i[0]] * j), np.random.normal(0, np.sqrt(i[1]), (n_configuration, j)))
@@ -74,11 +79,10 @@ else:
     fisher = (i.T.dot(covi).dot(i) for i in dYb)
     crlb = np.array([np.linalg.inv(i) for i in fisher])
 
-    with lzma.open(cache_file,"wb") as fp:
-        dill.dump((transmitters_coordinates, estimate, ap_coordinates, crlb),fp)
-
+    with lzma.open(cache_file, "wb") as fp:
+        dill.dump((transmitters_coordinates, estimate, ap_coordinates, crlb), fp)
 
 if __name__ == '__main__':
     # Plotting results
     p = plot_results(transmitters_coordinates, estimate, ap_coordinates, crlb)
-    show(p)
+    show(row(*p))

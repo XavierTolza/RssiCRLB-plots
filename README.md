@@ -7,4 +7,9 @@ First install dependencies
 pip3 install -r requirements.txt
 ```
 
-Then, to plot the results from auto_placement, run `python auto_placement.py`, for the numerical verification of CRLB run `python auto_placement.py`
+Then run script to plot:
+```
+chmod +x run_plots.sh
+./run_plots.sh
+```
+Plots should appear in browser window. THey are also available at HTML format in the `docs/` folder, or hosted on github using the [following link](https://xaviertolza.github.io/RssiCRLB-plots/) 

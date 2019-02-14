@@ -47,5 +47,5 @@ def plot_results(transmitters_coordinates, estimate, ap_coordinates, crlb, **kwa
     p2.legend.location = "bottom_right"
     p1.legend.location = "center_right"
     p2.xaxis.ticker = FixedTicker(ticks=[0,1])
-    return row(p1, p2)
+    return [p1, p2]
     # plt.show()

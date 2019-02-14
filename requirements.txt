@@ -7,3 +7,4 @@ pscript
 bokeh
 tqdm
 dill
+dotdict
